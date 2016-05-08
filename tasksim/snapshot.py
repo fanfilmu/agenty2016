@@ -12,21 +12,17 @@ class Snapshot(object):
 
     def capture(self):
         while True:
-            current = self.grid.data.copy()
-            newpid = os.fork()
-            if newpid == 0:
-                img = Image.new('RGB', (self.params.width, self.params.height))
+            img = Image.new('RGB', (self.params.width, self.params.height))
 
-                data = []
-                for y in xrange(self.params.height):
-                    for x in xrange(self.params.width):
-                        data.append(self.__parse_cell(current[x, y, 0]))
+            data = []
+            for y in xrange(self.params.height):
+                for x in xrange(self.params.width):
+                    data.append(self.__parse_cell(self.grid.data[x, y, 0]))
 
-                print 'saving image'
-                img.putdata(data)
-                img.save('sim%d.png' % self.env.now)
-            else:
-                yield self.env.timeout(5)
+            img.putdata(data)
+            img.save('sim%d.png' % self.env.now)
+
+            yield self.env.timeout(5)
 
     def __parse_cell(self, cell):
         if cell >= 1e100:
