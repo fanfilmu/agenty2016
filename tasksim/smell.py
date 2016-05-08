@@ -31,6 +31,8 @@ class Smell(object):
             self.move_to(*new_direction)
             yield self.env.timeout(4)
 
+        self.grid.data[self.x, self.y, 1] -= 1
+
     def move_to(self, x, y):
         self.grid.data[self.x, self.y, 1] -= 1
         self.grid.data[x, y, 1] += 1

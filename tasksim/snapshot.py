@@ -1,5 +1,6 @@
 from PIL import Image
-from tasksim.task import Task
+from task import Task
+from solver import Solver
 import pickle
 import os
 
@@ -50,6 +51,8 @@ class Snapshot(object):
     def __parse_cell(self, cell):
         if cell[0] == Task.id():
             return (255, 234, 4)
+        elif cell[0] == Solver.id():
+            return (255, 16, 4)
         else:
             v = min(255, int(cell[1]))
             return (v, v, v)
