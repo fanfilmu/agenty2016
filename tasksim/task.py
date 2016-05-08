@@ -11,6 +11,10 @@ class Task(object):
         self.fill = params.fill_level
         self.env.process(self.idle())
 
+    @staticmethod
+    def id():
+        return 1
+
     def idle(self):
         while True:
             yield self.env.timeout(3)

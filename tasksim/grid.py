@@ -1,19 +1,18 @@
 from collections import defaultdict
 import random
 from task import Task
+import numpy as np
 
 
 class Grid(object):
     def __init__(self, env, params):
         self.env = env
         self.params = params
-        self.data = defaultdict(lambda: 0)
-        self.env.process(self.idle())
+        # [x][y] = [object_type, smell]
+        self.data = np.zeros((self.params.width, self.params.height, 2))
 
-        self.add_task()
-        self.add_task()
-        self.add_task()
-        self.add_task()
+        for _ in xrange(params.task_count):
+            self.add_task()
 
     def idle(self):
         while True:
@@ -30,7 +29,8 @@ class Grid(object):
         while True:
             x = random.randint(0, self.params.width)
             y = random.randint(0, self.params.height)
-            if self.data[x, y, 0] < 1e100:
+            if self.data[x, y, 0] == 0:
                 break
-        self.data[x, y, 0] = 1e100
+
+        self.data[x, y, 0] = Task.id()
         Task(self.env, x, y, self, self.params)
