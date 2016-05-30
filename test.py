@@ -9,7 +9,7 @@ grid = tasksim.Grid(env, params)
 
 snapshot = tasksim.Snapshot(env, grid, params)
 
-env.run(until=1000)
+env.run(until=params.steps)
 
 print "generating images..."
 snapshot.generate_images()
