@@ -9,6 +9,8 @@ class Task(object):
         self.grid = grid
         self.params = params
         self.fill = params.fill_level
+        self.cleaned = 0
+        self.cleanedFill = 0
         self.env.process(self.idle())
 
     @staticmethod
@@ -25,7 +27,9 @@ class Task(object):
             self.fill = min(self.params.max_fill_level, self.fill + 1)
 
     def clear(self):
+        self.cleanedFill += self.fill
         self.fill = self.params.cooldown
+        self.cleaned += 1
 
     def generate_smell(self):
         Smell(self.env, self.x, self.y, self.grid, self.params)

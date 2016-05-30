@@ -12,6 +12,7 @@ class Params(object):
         self.task_count = 10
         self.steps = 1000
         self.cooldown = -50
+        self.task_ratio = 3
 
     def parse(self):
         args = self.__parser().parse_args()
@@ -23,6 +24,7 @@ class Params(object):
         self.task_count = args.task_count
         self.steps = args.steps
         self.cooldown = -args.cooldown
+        self.task_ratio = args.task_ratio
 
     def __parser(self):
         parser = argparse.ArgumentParser(
@@ -58,6 +60,9 @@ class Params(object):
         parser.add_argument('-T', '--task-count', dest='task_count', type=int,
                             default=10, help='Amount of task generating '
                             'smells. Defaults to 10')
+        parser.add_argument('-R', '--task-ratio', dest='task_ratio', type=int,
+                            default=3, help='Amount of tasks for every solver.'
+                            'Defaults to 3')
 
         parser.add_argument('-S', '--steps', dest='steps', type=int,
                             default=1000, help='Maximum amount of simulation '

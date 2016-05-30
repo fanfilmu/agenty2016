@@ -10,6 +10,7 @@ class Solver(object):
         self.y = y
         self.grid = grid
         self.params = params
+        self.cleaned = 0
         self.env.process(self.search())
 
     @staticmethod
@@ -33,6 +34,7 @@ class Solver(object):
                             max_smells = (self.grid.data[x, y, 1], [(x, y)])
                     elif self.grid.data[x, y, 0] == Task.id():
                         self.grid.clear_task_at(x, y)
+                        self.cleaned += 1
 
             new_direction = random.sample(max_smells[1], 1)[0]
             self.move_to(*new_direction)
