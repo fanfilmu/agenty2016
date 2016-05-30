@@ -23,7 +23,8 @@ class Params(object):
     def __parser(self):
         parser = argparse.ArgumentParser(
             description='Simulation of locating and solving randomly placed'
-                        ' tasks on 2D plane')
+                        ' tasks on 2D plane',
+            fromfile_prefix_chars='@')
         parser.add_argument('--fill-level', dest='fill_level',
                             type=int, default=1,
                             help='Initial fill level for new bins - determines'

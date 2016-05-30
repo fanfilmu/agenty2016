@@ -46,7 +46,7 @@ class Snapshot(object):
                 imgdata.append(self.__parse_cell(data[x][y]))
 
         img.putdata(imgdata)
-        img.save('sim%d.png' % step)
+        img.save('sim%06d.png' % step)
 
     def __parse_cell(self, cell):
         if cell[0] == Task.id():
