@@ -12,13 +12,15 @@ class Grid(object):
         # [x][y] = [object_type, smell, solver_smells]
         self.data = np.zeros((self.params.width, self.params.height, 3))
         self.tasks = {}
+        self.solvers = []
 
         for _ in xrange(params.task_count):
             task = self.add_task()
             self.tasks[(task.x, task.y)] = task
 
-        for _ in xrange(params.task_count / 3):
-            self.add_solver()
+        for _ in xrange(params.task_count / params.task_ratio):
+            solver = self.add_solver()
+            self.solvers.append(solver)
 
     def idle(self):
         while True:
@@ -54,4 +56,4 @@ class Grid(object):
     def add_solver(self):
         x, y = self.__find_empty_spot()
         self.data[x, y, 0] = Solver.id()
-        Solver(self.env, x, y, self, self.params)
+        return Solver(self.env, x, y, self, self.params)

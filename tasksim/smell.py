@@ -23,19 +23,19 @@ class Smell(object):
                     if y < 0 or y >= self.params.height:
                         continue
 
-                    if self.grid.data[x, y, 1] == min_smells[0]:
+                    if self.grid.data[x, y, self.smell_dimension] == min_smells[0]:
                         min_smells[1].append((x, y))
-                    elif self.grid.data[x, y, 1] < min_smells[0]:
-                        min_smells = (self.grid.data[x, y, 1], [(x, y)])
+                    elif self.grid.data[x, y, self.smell_dimension] < min_smells[0]:
+                        min_smells = (self.grid.data[x, y, self.smell_dimension], [(x, y)])
 
             new_direction = random.sample(min_smells[1], 1)[0]
             self.move_to(*new_direction)
             yield self.env.timeout(4)
 
-        self.grid.data[self.x, self.y, 1] -= 1
+        self.grid.data[self.x, self.y, self.smell_dimension] -= 1
 
     def move_to(self, x, y):
-        self.grid.data[self.x, self.y, 1] -= 1
+        self.grid.data[self.x, self.y, self.smell_dimension] -= 1
         self.grid.data[x, y, 1] += 1
         self.x = x
         self.y = y
