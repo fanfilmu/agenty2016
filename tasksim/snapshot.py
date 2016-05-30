@@ -71,6 +71,7 @@ class Snapshot(object):
         while True:
             try:
                 state = pickle.load(self.data_file)
+                _ = pickle.load(self.data_file)
                 stink_level = self.__get_stink_level(state)
                 stat_file.write("{} {}\n".format(step, stink_level))
 
