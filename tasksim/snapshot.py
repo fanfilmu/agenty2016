@@ -61,6 +61,7 @@ class Snapshot(object):
         stat_file.write("max_fill_level: {}\n".format(self.params.max_fill_level))
         stat_file.write("lifepoints: {}\n".format(self.params.lifepoints))
         stat_file.write("task_count: {}\n".format(self.params.task_count))
+        stat_file.write("task_ratio: {}\n".format(self.params.task_ratio))
 
         # stink level in time
         stat_file.write("\n\nstink level:\n")
