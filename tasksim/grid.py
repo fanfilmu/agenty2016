@@ -27,7 +27,10 @@ class Grid(object):
             self.generate_task()
 
     def clear_task_at(self, x, y):
-        self.tasks[(x, y)].clear()
+        self.task_at(x, y).clear()
+
+    def task_at(self, x, y):
+        return self.tasks[(x, y)]
 
     def generate_task(self):
         if random.random() < 0.5:
