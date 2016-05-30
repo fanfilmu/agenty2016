@@ -11,6 +11,7 @@ class Params(object):
         self.lifepoints = 15
         self.task_count = 10
         self.steps = 1000
+        self.cooldown = -50
 
     def parse(self):
         args = self.__parser().parse_args()
@@ -21,6 +22,7 @@ class Params(object):
         self.lifepoints = args.lifepoints
         self.task_count = args.task_count
         self.steps = args.steps
+        self.cooldown = -args.cooldown
 
     def __parser(self):
         parser = argparse.ArgumentParser(
@@ -48,12 +50,17 @@ class Params(object):
                             default=15, help='Lifepoints of a new smell.'
                             ' Defaults to 15')
 
+        parser.add_argument('-C', '--cooldown', dest='cooldown', type=int,
+                            default=20, help='Determines length of the period '
+                            'in which tasks do not generate smells after '
+                            'clearing. Defaults to 20')
+
         parser.add_argument('-T', '--task-count', dest='task_count', type=int,
                             default=10, help='Amount of task generating '
                             'smells. Defaults to 10')
 
         parser.add_argument('-S', '--steps', dest='steps', type=int,
-                            default=10, help='Maximum amount of simulation '
+                            default=1000, help='Maximum amount of simulation '
                             'steps. Defaults to 1000')
 
         return parser

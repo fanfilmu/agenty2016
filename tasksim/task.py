@@ -25,7 +25,7 @@ class Task(object):
             self.fill = min(self.params.max_fill_level, self.fill + 1)
 
     def clear(self):
-        self.fill = -10
+        self.fill = self.params.cooldown
 
     def generate_smell(self):
         Smell(self.env, self.x, self.y, self.grid, self.params)
