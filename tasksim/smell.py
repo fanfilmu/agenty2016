@@ -2,7 +2,7 @@ import random
 
 
 class Smell(object):
-    def __init__(self, env, x, y, grid, params):
+    def __init__(self, env, x, y, grid, params, smell_dimension=1):
         self.env = env
         self.x = x
         self.y = y
@@ -10,6 +10,7 @@ class Smell(object):
         self.grid.data[x, y, 1] += 1
         self.params = params
         self.lifepoints = params.lifepoints
+        self.smell_dimension = smell_dimension
         self.env.process(self.move())
 
     def move(self):

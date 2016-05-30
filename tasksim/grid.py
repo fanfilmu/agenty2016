@@ -9,8 +9,8 @@ class Grid(object):
     def __init__(self, env, params):
         self.env = env
         self.params = params
-        # [x][y] = [object_type, smell]
-        self.data = np.zeros((self.params.width, self.params.height, 2))
+        # [x][y] = [object_type, smell, solver_smells]
+        self.data = np.zeros((self.params.width, self.params.height, 3))
         self.tasks = {}
 
         for _ in xrange(params.task_count):
