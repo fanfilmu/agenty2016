@@ -6,6 +6,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 import json
+import numpy as np
 
 
 class Snapshot(object):
@@ -49,6 +50,9 @@ class Snapshot(object):
 
         stink_x = []
         stink_y = []
+        cleaned_tasks_per_task = []
+        cleaned_tasks_per_solver = []
+        avg_cleaned_trash_lvl = []
 
         # save configuration
         stat_json['width'] = self.params.width
@@ -88,6 +92,7 @@ class Snapshot(object):
         task_no = 0
         for _, task in self.grid.tasks.iteritems():
             stat_json['cleaned_tasks_per_task'][task_no] = task.cleaned
+            cleaned_tasks_per_task.append(task.cleaned)
             task_no +=1
 
         # cleaned tasks (for solver)
@@ -95,6 +100,7 @@ class Snapshot(object):
         solver_no = 0
         for solver in self.grid.solvers:
             stat_json['cleaned_tasks_per_solver'][solver_no] = solver.cleaned
+            cleaned_tasks_per_solver.append(solver.cleaned)
             solver_no +=1
 
         # avarage level of fill for tasks on clean:
@@ -103,6 +109,7 @@ class Snapshot(object):
         for _, task in self.grid.tasks.iteritems():
             avg = task.cleanedFill / float(task.cleaned) if task.cleaned else 0
             stat_json['avg_cleaned_trash_lvl'][task_no] = avg
+            avg_cleaned_trash_lvl.append(avg)
             task_no +=1
 
 
@@ -122,6 +129,42 @@ class Snapshot(object):
         plt.plot(stink_x, stink_y)
         plt.xlabel('time')
         plt.ylabel('stink level')
+        plt.savefig(os.path.join(stat_path, plot_filename))
+
+        plot_filename = "cleaned_tasks_per_task_{}.png".format(self.timestamp)
+        ind = np.arange(task_no)
+        width = 0.35
+        fig, ax = plt.subplots()
+        rects1 = ax.bar(ind, cleaned_tasks_per_task, width, color='r')
+        ax.set_ylabel('Cleaned tasks')
+        ax.set_title('Cleaned tasks per task')
+        ax.set_xticks(ind + width)
+        ax.set_xticklabels(xrange(task_no))
+        ax.set_xlabel('Task')
+        plt.savefig(os.path.join(stat_path, plot_filename))
+
+        plot_filename = "cleaned_tasks_per_solver_{}.png".format(self.timestamp)
+        ind = np.arange(solver_no)
+        width = 0.35
+        fig, ax = plt.subplots()
+        rects1 = ax.bar(ind, cleaned_tasks_per_solver, width, color='r')
+        ax.set_ylabel('Cleaned tasks')
+        ax.set_title('Cleaned tasks per solver')
+        ax.set_xticks(ind + width)
+        ax.set_xticklabels(xrange(solver_no))
+        ax.set_xlabel('Solver')
+        plt.savefig(os.path.join(stat_path, plot_filename))
+
+        plot_filename = "avg_cleaned_trash_lvl_{}.png".format(self.timestamp)
+        ind = np.arange(task_no)
+        width = 0.35
+        fig, ax = plt.subplots()
+        rects1 = ax.bar(ind, avg_cleaned_trash_lvl, width, color='r')
+        ax.set_ylabel('Average clean trash level')
+        ax.set_title('Average clean trash level per task')
+        ax.set_xticks(ind + width)
+        ax.set_xticklabels(xrange(task_no))
+        ax.set_xlabel('Task')
         plt.savefig(os.path.join(stat_path, plot_filename))
 
         pass
