@@ -36,6 +36,7 @@ class Snapshot(object):
             try:
                 grid_data = pickle.load(self.data_file)
                 task_data = pickle.load(self.data_file)
+                solver_data = pickle.load(self.data_file)
                 self.__dump_image(grid_data, task_data, step)
                 step += 5
             except EOFError:
@@ -63,6 +64,8 @@ class Snapshot(object):
 
         # stink level in time
         stat_json['stink_level'] = {}
+        
+        stat_json['cleaned_by_solvers_in_step'] = {}
 
         self.data_file.close()
         self.data_file = open("result.dat", "r")
@@ -71,8 +74,10 @@ class Snapshot(object):
             try:
                 state = pickle.load(self.data_file)
                 _ = pickle.load(self.data_file)
+                solver_data = pickle.load(self.data_file)
                 stink_level = self.__get_stink_level(state)
                 stat_json['stink_level'][step] = stink_level
+                stat_json['cleaned_by_solvers_in_step'][step] = solver_data
 
                 stink_x.append(step)
                 stink_y.append(stink_level)
@@ -139,6 +144,12 @@ class Snapshot(object):
         pickle.dump(self.grid.data, self.data_file, protocol=2)
         task_data = { k: v.fill for k, v in self.grid.tasks.iteritems() }
         pickle.dump(task_data, self.data_file, protocol=2)
+        cleaned_by_solver = [s.cleaned for s in self.grid.solvers]
+        avg = sum(cleaned_by_solver) / float(len(cleaned_by_solver))
+        solver_data = {'min': min(cleaned_by_solver),
+                       'avg': avg,
+                       'max': max(cleaned_by_solver)}
+        pickle.dump(solver_data, self.data_file, protocol=2)
 
     def __dump_image(self, data, task_data, step):
         img = Image.new('RGB', (self.params.width, self.params.height))
