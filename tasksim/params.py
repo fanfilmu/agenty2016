@@ -1,5 +1,8 @@
 import argparse
 import json
+from bins_strategy import BinsStrategy
+from random_strategy import RandomStrategy
+from smell_strategy import SmellStrategy
 
 
 class Params(object):
@@ -13,6 +16,7 @@ class Params(object):
         self.steps = 1000
         self.cooldown = -50
         self.task_ratio = 3
+        self.strategy_class = SmellStrategy
 
     def parse(self):
         args = self.__parser().parse_args()
@@ -25,6 +29,7 @@ class Params(object):
         self.steps = args.steps
         self.cooldown = -args.cooldown
         self.task_ratio = args.task_ratio
+        self.strategy_class = { "rand": RandomStrategy, "bins": BinsStrategy, "smell": SmellStrategy }[args.strategy]
 
     def __parser(self):
         parser = argparse.ArgumentParser(
@@ -67,5 +72,11 @@ class Params(object):
         parser.add_argument('-S', '--steps', dest='steps', type=int,
                             default=1000, help='Maximum amount of simulation '
                             'steps. Defaults to 1000')
+
+        parser.add_argument('-s', '--strategy', dest='strategy',
+                            default='smell', help='Strategy for solvers. '
+                            'Can be one of: "rand" - random movement; "bins" '
+                            '- only smell from the bins counts; "smell" - '
+                            'solvers emit their own smell')
 
         return parser
