@@ -1,4 +1,6 @@
 from base_strategy import BaseStrategy
+from task import Task
+import random
 
 
 class BinsStrategy(BaseStrategy):
