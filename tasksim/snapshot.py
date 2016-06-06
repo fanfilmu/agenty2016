@@ -5,6 +5,7 @@ import pickle
 import os
 import time
 import matplotlib.pyplot as plt
+import json
 
 
 class Snapshot(object):
@@ -44,27 +45,25 @@ class Snapshot(object):
 
     def generate_statistics(self):
 
+        stat_json = {}
+
         stink_x = []
         stink_y = []
 
-        stat_path = "./stats"
-        if not os.path.exists(stat_path):
-            os.makedirs(stat_path)
-
-        stat_filename = "stats_{}.txt".format(self.timestamp)
-        stat_file = open(os.path.join(stat_path, stat_filename), "wb")
-
         # save configuration
-        stat_file.write("width: {}\n".format(self.params.width))
-        stat_file.write("height: {}\n".format(self.params.height))
-        stat_file.write("fill_level: {}\n".format(self.params.fill_level))
-        stat_file.write("max_fill_level: {}\n".format(self.params.max_fill_level))
-        stat_file.write("lifepoints: {}\n".format(self.params.lifepoints))
-        stat_file.write("task_count: {}\n".format(self.params.task_count))
-        stat_file.write("task_ratio: {}\n".format(self.params.task_ratio))
+        stat_json['width'] = self.params.width
+        stat_json['height'] = self.params.height
+        stat_json['steps'] = self.params.steps
+        stat_json['fill_level'] = self.params.fill_level
+        stat_json['max_fill_level'] = self.params.max_fill_level
+        stat_json['lifepoints'] = self.params.lifepoints
+        stat_json['cooldown'] =  self.params.cooldown
+        stat_json['task_count'] = self.params.task_count
+        stat_json['task_ratio'] = self.params.task_ratio
 
         # stink level in time
-        stat_file.write("\n\nstink level:\n")
+        stat_json['stink_level'] = {}
+
         self.data_file.close()
         self.data_file = open("result.dat", "r")
         step = 0
@@ -73,7 +72,7 @@ class Snapshot(object):
                 state = pickle.load(self.data_file)
                 _ = pickle.load(self.data_file)
                 stink_level = self.__get_stink_level(state)
-                stat_file.write("{} {}\n".format(step, stink_level))
+                stat_json['stink_level'][step] = stink_level
 
                 stink_x.append(step)
                 stink_y.append(stink_level)
@@ -85,21 +84,36 @@ class Snapshot(object):
         self.data_file.close()
 
         # cleaned tasks (for task)
-        stat_file.write("\n\ntasks done (for task):\n")
+        stat_json['cleaned_tasks_per_task'] = {}
+        task_no = 0
         for _, task in self.grid.tasks.iteritems():
-            stat_file.write("{}\n".format(task.cleaned))
+            stat_json['cleaned_tasks_per_task'][task_no] = task.cleaned
+            task_no +=1
 
         # cleaned tasks (for solver)
-        stat_file.write("\n\ntasks done (for solver):\n")
+        stat_json['cleaned_tasks_per_solver'] = {}
+        solver_no = 0
         for solver in self.grid.solvers:
-            stat_file.write("{}\n".format(solver.cleaned))
+            stat_json['cleaned_tasks_per_solver'][solver_no] = solver.cleaned
+            solver_no +=1
 
         # avarage level of fill for tasks on clean:
-        stat_file.write("\n\navarage level of fill on clean:\n")
+        stat_json['avg_cleaned_trash_lvl'] = {}
+        task_no = 0
         for _, task in self.grid.tasks.iteritems():
             avg = task.cleanedFill / float(task.cleaned) if task.cleaned else 0
-            stat_file.write("{}\n".format(avg))
+            stat_json['avg_cleaned_trash_lvl'][task_no] = avg
+            task_no +=1
 
+
+        # save stats in file
+        stat_path = "./stats"
+        if not os.path.exists(stat_path):
+            os.makedirs(stat_path)
+
+        stat_filename = "stats_{}.json".format(self.timestamp)
+        stat_file = open(os.path.join(stat_path, stat_filename), "wb")
+        stat_file.write(json.dumps(stat_json))
 
         stat_file.close()
 
