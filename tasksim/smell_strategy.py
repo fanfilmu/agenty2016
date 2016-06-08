@@ -33,4 +33,4 @@ class SmellStrategy(BaseStrategy):
                   smell_dimension=2)
 
     def __total_smell_value(self, x, y):
-        return self.solver.grid.data[x, y, 1] - self.solver.grid.data[x, y, 2]
+        return max(0, self.solver.grid.data[x, y, 1] - self.solver.grid.data[x, y, 2])
