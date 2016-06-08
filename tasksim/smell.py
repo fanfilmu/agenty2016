@@ -7,7 +7,7 @@ class Smell(object):
         self.x = x
         self.y = y
         self.grid = grid
-        self.grid.data[x, y, 1] += 1
+        self.grid.data[x, y, smell_dimension] += 1
         self.params = params
         self.lifepoints = params.lifepoints
         self.smell_dimension = smell_dimension
@@ -36,7 +36,7 @@ class Smell(object):
 
     def move_to(self, x, y):
         self.grid.data[self.x, self.y, self.smell_dimension] -= 1
-        self.grid.data[x, y, 1] += 1
+        self.grid.data[x, y, self.smell_dimension] += 1
         self.x = x
         self.y = y
         self.lifepoints -= 1
